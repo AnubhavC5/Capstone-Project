@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation, Route, Routes } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,34 +13,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Slider } from '@/components/ui/slider';
-import { Home, Users, Bell, MessageSquare, Search, Pencil, Camera, PlusCircle, X, Trash2 } from 'lucide-react';
+} from "@/components/ui/popover"
+import { Slider } from "@/components/ui/slider"
+import { Home, Users, Bell, MessageSquare, Search, Pencil, PlusCircle, X, Camera, Trash2 } from 'lucide-react'
 
 // Navbar Component
-function Navbar() {
+function Navbar({ isLoggedIn, user, onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [skillFilter, setSkillFilter] = useState('');
-  const [connectionFilter, setConnectionFilter] = useState([0]);
+  const [searchQuery, setSearchQuery] = useState('')
+  const [skillFilter, setSkillFilter] = useState('')
+  const [connectionFilter, setConnectionFilter] = useState([0])
 
   const handleSearch = (e) => {
-    e.preventDefault();
-    navigate(`/search?q=${searchQuery}&skill=${skillFilter}&connections=${connectionFilter[0]}`);
+    e.preventDefault()
+    navigate(`/search?q=${searchQuery}&skill=${skillFilter}&connections=${connectionFilter[0]}`)
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 border-b bg-white z-10">
+    (<nav className="fixed top-0 left-0 right-0 border-b bg-white z-10">
       <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
         <div className="flex items-center space-x-4">
           <Link to="/">
-            <svg
+          <svg
               xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="35.93" height="32" preserveAspectRatio="xMidYMid meet"
               viewBox="0 0 256 228"
               fill="currentColor"
@@ -50,51 +50,52 @@ function Navbar() {
               </path>
             </svg>
           </Link>
-          <form onSubmit={handleSearch} className="relative flex items-center">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              type="search"
-              placeholder="Search"
-              className="pl-8 w-64"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="sm" className="ml-2">
-                  Filters
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80">
-                <div className="grid gap-4">
-                  <div className="space-y-2">
-                    <h4 className="font-medium leading-none">Skill</h4>
-                    <Input
-                      placeholder="Filter by skill"
-                      value={skillFilter}
-                      onChange={(e) => setSkillFilter(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="font-medium leading-none">Connections</h4>
-                    <Slider
-                      min={0}
-                      max={500}
-                      step={10}
-                      value={connectionFilter}
-                      onValueChange={setConnectionFilter}
-                    />
-                    <div className="text-sm text-gray-500">
-                      Minimum connections: {connectionFilter[0]}
+          {isLoggedIn && (
+            <form onSubmit={handleSearch} className="relative flex items-center">
+              <Search
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                type="search"
+                placeholder="Search"
+                className="pl-8 w-64"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} 
+              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="ml-2">
+                    Filters
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="grid gap-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium leading-none">Skill</h4>
+                      <Input
+                        placeholder="Filter by skill"
+                        value={skillFilter}
+                        onChange={(e) => setSkillFilter(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="font-medium leading-none">Connections</h4>
+                      <Slider
+                        min={0}
+                        max={500}
+                        step={10}
+                        value={connectionFilter}
+                        onValueChange={setConnectionFilter} />
+                      <div className="text-sm text-gray-500">
+                        Minimum connections: {connectionFilter[0]}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </form>
+                </PopoverContent>
+              </Popover>
+            </form>
+          )}
         </div>
         <div className="flex items-center space-x-6">
-          <Link to="/">
+          <Link to="/" passHref>
             <Button
               variant="ghost"
               size="sm"
@@ -103,142 +104,208 @@ function Navbar() {
               <span className="sr-only">Home</span>
             </Button>
           </Link>
-          <Link to="/network">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={location.pathname === '/network' ? 'text-blue-600' : ''}>
-              <Users className="w-5 h-5" />
-              <span className="sr-only">My Network</span>
-            </Button>
-          </Link>
-          <Link to="/jobs">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={location.pathname === '/jobs' ? 'text-blue-600' : ''}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-              </svg>
-              <span className="sr-only">Jobs</span>
-            </Button>
-          </Link>
-          <Link to="/messaging">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={location.pathname === '/messaging' ? 'text-blue-600' : ''}>
-              <MessageSquare className="w-5 h-5" />
-              <span className="sr-only">Messaging</span>
-            </Button>
-          </Link>
-          <Link to="/notifications">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={location.pathname === '/notifications' ? 'text-blue-600' : ''}>
-              <Bell className="w-5 h-5" />
-              <span className="sr-only">Notifications</span>
-            </Button>
-          </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder.svg" alt="@shadcn" />
-                  <AvatarFallback>SC</AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">shadcn</p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    m@example.com
-                  </p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to="/profile">Profile</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to="/settings">Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to="/logout">Log out</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isLoggedIn && (
+            <>
+              <Link to="/network" passHref>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={location.pathname === '/network' ? 'text-blue-600' : ''}>
+                  <Users className="w-5 h-5" />
+                  <span className="sr-only">My Network</span>
+                </Button>
+              </Link>
+              <Link to="/jobs" passHref>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={location.pathname === '/jobs' ? 'text-blue-600' : ''}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-5 h-5">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                  </svg>
+                  <span className="sr-only">Jobs</span>
+                </Button>
+              </Link>
+              <Link to="/messaging" passHref>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={location.pathname === '/messaging' ? 'text-blue-600' : ''}>
+                  <MessageSquare className="w-5 h-5" />
+                  <span className="sr-only">Messaging</span>
+                </Button>
+              </Link>
+              <Link to="/notifications" passHref>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={location.pathname === '/notifications' ? 'text-blue-600' : ''}>
+                  <Bell className="w-5 h-5" />
+                  <span className="sr-only">Notifications</span>
+                </Button>
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder.svg" alt={user?.name || '@user'} />
+                      <AvatarFallback>{user?.name?.[0] || 'U'}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">{user?.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link to="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/settings">Settings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={onLogout}>
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
+          {!isLoggedIn && (
+            <>
+              <Link to="/login" passHref>
+                <Button variant="ghost">Sign In</Button>
+              </Link>
+              <Link to="/signup" passHref>
+                <Button>Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
-    </nav>
+    </nav>)
   );
 }
+
 // Home Page Component
 function HomePage() {
   const posts = [
     {
       id: 1,
       author: {
-        name: 'John Doe',
-        avatar: '/placeholder.svg?height=40&width=40',
-        title: 'Software Engineer at Tech Corp',
+        name: "John Doe",
+        avatar: "/placeholder.svg?height=40&width=40",
+        title: "Software Engineer at Tech Corp"
       },
-      content: 'Just published a new article on microservices architecture!',
+      content: "Just published a new article on microservices architecture!",
       likes: 42,
-      comments: 7,
+      comments: 7
     },
     {
       id: 2,
       author: {
-        name: 'Jane Smith',
-        avatar: '/placeholder.svg?height=40&width=40',
-        title: 'Product Manager at Startup Inc.',
+        name: "Jane Smith",
+        avatar: "/placeholder.svg?height=40&width=40",
+        title: "Product Manager at Innovate Inc"
       },
-      content: 'Excited to share our new product launch!',
-      likes: 58,
-      comments: 12,
-    },
-  ];
+      content: "Excited to announce our new product launch next week!",
+      likes: 89,
+      comments: 15
+    }
+  ]
 
   return (
-    <div>
-      {posts.map((post) => (
-        <Card key={post.id} className="mb-4">
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <Avatar>
-                <AvatarImage src={post.author.avatar} />
-                <AvatarFallback>SC</AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="text-sm font-medium">{post.author.name}</p>
-                <p className="text-xs text-muted-foreground">{post.author.title}</p>
+    (<div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2 space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <textarea
+                className="w-full p-2 border rounded"
+                placeholder="What's on your mind?"
+                rows={3} />
+              <div className="mt-4 flex justify-end">
+                <Button>Post</Button>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p>{post.content}</p>
-            <div className="flex items-center space-x-4 mt-4">
-              <Badge variant="outline">{post.likes} Likes</Badge>
-              <Badge variant="outline">{post.comments} Comments</Badge>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+            </CardContent>
+          </Card>
+          {posts.map((post) => (
+            <Card key={post.id}>
+              <CardHeader>
+                <div className="flex items-center space-x-4">
+                  <Avatar>
+                    <AvatarImage src={post.author.avatar} alt={post.author.name} />
+                    <AvatarFallback>{post.author.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <CardTitle className="text-lg">{post.author.name}</CardTitle>
+                    <p className="text-sm text-gray-500">{post.author.title}</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p>{post.content}</p>
+                <div className="mt-4 flex items-center space-x-4 text-sm text-gray-500">
+                  <span>{post.likes} Likes</span>
+                  <span>{post.comments} Comments</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Suggested Connections</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-4">
+                {["Alice Johnson", "Bob Williams", "Carol Davis"].map((name) => (
+                  <li key={name} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Avatar>
+                        <AvatarFallback>{name[0]}</AvatarFallback>
+                      </Avatar>
+                      <span>{name}</span>
+                    </div>
+                    <Button variant="outline" size="sm">Connect</Button>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Jobs</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {["Frontend Developer", "UX Designer", "Product Manager"].map((job) => (
+                  <li key={job} className="text-sm">
+                    <a href="#" className="text-blue-600 hover:underline">{job}</a>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>)
   );
 }
 
@@ -272,10 +339,10 @@ function NetworkPage() {
       skills: ["Python", "Machine Learning", "Data Visualization"],
       avatar: "/placeholder.svg?height=100&width=100"
     }
-  ];
+  ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    (<div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">My Network</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {people.map((person) => (
@@ -305,15 +372,14 @@ function NetworkPage() {
           </Card>
         ))}
       </div>
-    </div>
+    </div>)
   );
 }
 
 // Jobs Page Component
 function JobsPage() {
   const jobs = [
-    {
-      id: 1,
+    { id: 1,
       title: "Frontend Developer",
       company: "Tech Corp",
       location: "San Francisco, CA"
@@ -329,11 +395,11 @@ function JobsPage() {
       title: "Data Scientist",
       company: "Data Insights",
       location: "Boston, MA"
-    }
-  ];
+    },
+  ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    (<div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Job Search</h1>
       <div className="mb-6">
         <Input type="text" placeholder="Search for jobs" className="w-full mb-2" />
@@ -353,7 +419,7 @@ function JobsPage() {
           </Card>
         ))}
       </div>
-    </div>
+    </div>)
   );
 }
 
@@ -363,10 +429,10 @@ function MessagingPage() {
     { id: 1, name: "Alice Johnson", lastMessage: "Hey, how's it going?", avatar: "/placeholder.svg?height=40&width=40" },
     { id: 2, name: "Bob Williams", lastMessage: "Can we schedule a meeting?", avatar: "/placeholder.svg?height=40&width=40" },
     { id: 3, name: "Carol Davis", lastMessage: "Thanks for your help!", avatar: "/placeholder.svg?height=40&width=40" },
-  ];
+  ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    (<div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Messaging</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-1">
@@ -405,7 +471,7 @@ function MessagingPage() {
           </Card>
         </div>
       </div>
-    </div>
+    </div>)
   );
 }
 
@@ -415,10 +481,10 @@ function NotificationsPage() {
     { id: 1, type: "connection", user: "Alice Johnson", action: "accepted your connection request", time: "2 hours ago", avatar: "/placeholder.svg?height=40&width=40" },
     { id: 2, type: "like", user: "Bob Williams", action: "liked your post", time: "5 hours ago", avatar: "/placeholder.svg?height=40&width=40" },
     { id: 3, type: "comment", user: "Carol Davis", action: "commented on your article", time: "1 day ago", avatar: "/placeholder.svg?height=40&width=40" },
-  ];
+  ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    (<div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Notifications</h1>
       <div className="space-y-4">
         {notifications.map((notification) => (
@@ -439,15 +505,15 @@ function NotificationsPage() {
           </Card>
         ))}
       </div>
-    </div>
+    </div>)
   );
 }
 
 // Profile Page Component
-function ProfilePage() {
-  const [isEditing, setIsEditing] = useState(false);
+function ProfilePage({ user }) {
+  const [isEditing, setIsEditing] = useState(false)
   const [profile, setProfile] = useState({
-    name: "John Doe",
+    name: user?.name || "John Doe",
     title: "Software Engineer",
     company: "Tech Corp",
     location: "San Francisco, CA",
@@ -494,85 +560,83 @@ function ProfilePage() {
         duration: "Sep 2013 - Jun 2017",
       }
     ]
-  });
-  const [newSkill, setNewSkill] = useState("");
-  const [newExperience, setNewExperience] = useState({ title: "", company: "", location: "", duration: "", description: "" });
-  const [newEducation, setNewEducation] = useState({ school: "", degree: "", duration: "" });
+  })
+  const [newSkill, setNewSkill] = useState("")
+  const [newExperience, setNewExperience] = useState({ title: "", company: "", location: "", duration: "", description: "" })
+  const [newEducation, setNewEducation] = useState({ school: "", degree: "", duration: "" })
 
-  const handleEdit = () => setIsEditing(true);
-  const handleSave = () => setIsEditing(false);
-
+  const handleEdit = () => setIsEditing(true)
+  const handleSave = () => setIsEditing(false)
   const handleChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
-
+    setProfile({ ...profile, [e.target.name]: e.target.value })
+  }
   const handleAddSkill = () => {
     if (newSkill && !profile.skills.includes(newSkill)) {
-      setProfile({ ...profile, skills: [...profile.skills, newSkill] });
-      setNewSkill("");
+      setProfile({ ...profile, skills: [...profile.skills, newSkill] })
+      setNewSkill("")
     }
-  };
+  }
   const handleRemoveSkill = (skill) => {
-    setProfile({ ...profile, skills: profile.skills.filter(s => s !== skill) });
-  };
+    setProfile({ ...profile, skills: profile.skills.filter(s => s !== skill) })
+  }
   const handleImageUpload = (e) => {
     // Handle image upload logic here
-    console.log("Image uploaded:", e.target.files?.[0]);
-  };
+    console.log("Image uploaded:", e.target.files?.[0])
+  }
 
   const handleExperienceChange = (id, field, value) => {
     setProfile({
       ...profile,
       experience: profile.experience.map(exp =>
         exp.id === id ? { ...exp, [field]: value } : exp)
-    });
-  };
+    })
+  }
 
   const handleAddExperience = () => {
-    const id = Math.max(0, ...profile.experience.map(e => e.id)) + 1;
+    const id = Math.max(0, ...profile.experience.map(e => e.id)) + 1
     setProfile({
       ...profile,
       experience: [...profile.experience, { id, ...newExperience }]
-    });
-    setNewExperience({ title: "", company: "", location: "", duration: "", description: "" });
-  };
+    })
+    setNewExperience({ title: "", company: "", location: "", duration: "", description: "" })
+  }
 
   const handleRemoveExperience = (id) => {
     setProfile({
       ...profile,
       experience: profile.experience.filter(exp => exp.id !== id)
-    });
-  };
+    })
+  }
 
   const handleEducationChange = (id, field, value) => {
     setProfile({
       ...profile,
       education: profile.education.map(edu =>
         edu.id === id ? { ...edu, [field]: value } : edu)
-    });
-  };
+    })
+  }
 
   const handleAddEducation = () => {
-    const id = Math.max(0, ...profile.education.map(e => e.id)) + 1;
+    const id = Math.max(0, ...profile.education.map(e => e.id)) + 1
     setProfile({
       ...profile,
       education: [...profile.education, { id, ...newEducation }]
-    });
-    setNewEducation({ school: "", degree: "", duration: "" });
-  };
+    })
+    setNewEducation({ school: "", degree: "", duration: "" })
+  }
 
   const handleRemoveEducation = (id) => {
     setProfile({
       ...profile,
       education: profile.education.filter(edu => edu.id !== id)
-    });
-  };
+    })
+  }
 
   const renderSection = (section) => {
     switch (section) {
       case 'about':
         return (
-          <Card className="mb-6">
+          (<Card className="mb-6">
             <CardHeader>
               <CardTitle>About</CardTitle>
             </CardHeader>
@@ -588,11 +652,11 @@ function ProfilePage() {
                 <p>{profile.about}</p>
               )}
             </CardContent>
-          </Card>
+          </Card>)
         );
       case 'activity':
         return (
-          <Card className="mb-6">
+          (<Card className="mb-6">
             <CardHeader>
               <CardTitle>Activity</CardTitle>
             </CardHeader>
@@ -619,11 +683,11 @@ function ProfilePage() {
                 <Button variant="link" className="text-blue-600">Show all activity →</Button>
               </div>
             </CardContent>
-          </Card>
+          </Card>)
         );
       case 'experience':
         return (
-          <Card className="mb-6">
+          (<Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
                 Experience
@@ -673,25 +737,55 @@ function ProfilePage() {
                           <h4 className="font-semibold">{exp.title}</h4>
                           <p className="text-sm">{exp.company}</p>
                           <p className="text-sm text-gray-500">{exp.location}</p>
-                          <p className="text-sm text-gray-400">{exp.duration}</p>
-                          <p className="text-sm">{exp.description}</p>
+                          <p className="text-sm text-gray-500">{exp.duration}</p>
+                          <p className="mt-2">{exp.description}</p>
                         </>
                       )}
-                      {isEditing && (
-                        <Button variant="link" className="text-red-500" onClick={() => handleRemoveExperience(exp.id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      )}
                     </div>
+                    {isEditing && (
+                      <Button variant="ghost" onClick={() => handleRemoveExperience(exp.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                 </Card>
               ))}
+              {isEditing && (
+                <Card className="p-4 mb-4 bg-gray-50">
+                  <Input
+                    value={newExperience.title}
+                    onChange={(e) => setNewExperience({ ...newExperience, title: e.target.value })}
+                    className="mb-2"
+                    placeholder="New Job Title" />
+                  <Input
+                    value={newExperience.company}
+                    onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })}
+                    className="mb-2"
+                    placeholder="New Company" />
+                  <Input
+                    value={newExperience.location}
+                    onChange={(e) => setNewExperience({ ...newExperience, location: e.target.value })}
+                    className="mb-2"
+                    placeholder="New Location" />
+                  <Input
+                    value={newExperience.duration}
+                    onChange={(e) => setNewExperience({ ...newExperience, duration: e.target.value })}
+                    className="mb-2"
+                    placeholder="New Duration" />
+                  <Textarea
+                    value={newExperience.description}
+                    onChange={(e) => setNewExperience({ ...newExperience, description: e.target.value })}
+                    className="mb-2"
+                    placeholder="New Description" />
+                  <Button onClick={handleAddExperience}>Add Experience</Button>
+                </Card>
+              )}
             </CardContent>
-          </Card>
+          </Card>)
         );
       case 'education':
         return (
-          <Card className="mb-6">
+          (<Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
                 Education
@@ -722,29 +816,49 @@ function ProfilePage() {
                           <Input
                             value={edu.duration}
                             onChange={(e) => handleEducationChange(edu.id, 'duration', e.target.value)}
-                            className="mb-2 text-sm"
+                            className="text-sm"
                             placeholder="Duration" />
                         </>
                       ) : (
                         <>
-                          <h4 className="font-semibold">{edu.degree}</h4>
-                          <p className="text-sm">{edu.school}</p>
-                          <p className="text-sm text-gray-400">{edu.duration}</p>
+                          <h4 className="font-semibold">{edu.school}</h4>
+                          <p className="text-sm">{edu.degree}</p>
+                          <p className="text-sm text-gray-500">{edu.duration}</p>
                         </>
                       )}
-                      {isEditing && (
-                        <Button variant="link" className="text-red-500" onClick={() => handleRemoveEducation(edu.id)}>
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      )}
                     </div>
+                    {isEditing && (
+                      <Button variant="ghost" onClick={() => handleRemoveEducation(edu.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
                   </div>
                 </Card>
               ))}
+              {isEditing && (
+                <Card className="p-4 mb-4 bg-gray-50">
+                  <Input
+                    value={newEducation.school}
+                    onChange={(e) => setNewEducation({ ...newEducation, school: e.target.value })}
+                    className="mb-2"
+                    placeholder="New School" />
+                  <Input
+                    value={newEducation.degree}
+                    onChange={(e) => setNewEducation({ ...newEducation, degree: e.target.value })}
+                    className="mb-2"
+                    placeholder="New Degree" />
+                  <Input
+                    value={newEducation.duration}
+                    onChange={(e) => setNewEducation({ ...newEducation, duration: e.target.value })}
+                    className="mb-2"
+                    placeholder="New Duration" />
+                  <Button onClick={handleAddEducation}>Add Education</Button>
+                </Card>
+              )}
             </CardContent>
-          </Card>
-        )
-        case 'skills':
+          </Card>)
+        );
+      case 'skills':
         return (
           (<Card className="mb-6">
             <CardHeader>
@@ -831,7 +945,7 @@ function ProfilePage() {
                     onChange={handleChange}
                     className="text-sm bg-white/20 text-white placeholder-white/60" />
                 ) : (
-                  <p className="text-sm2">{profile.location}</p>
+                  <p className="text-sm">{profile.location}</p>
                 )}
                 {(
                   <p className="text-sm">{profile.connections} Connections</p>
@@ -867,22 +981,192 @@ function ProfilePage() {
   );
 }
 
+// Login Page Component
+function LoginPage({ onLogin }) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // Here you would typically make an API call to authenticate the user
+    // For this example, we'll just simulate a successful login
+    onLogin({ name: 'John Doe', email: email })
+  }
+
+  return (
+    (<div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">Sign In</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="email">Email</label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="password">Password</label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required />
+            </div>
+            <Button type="submit" className="w-full">Sign In</Button>
+          </form>
+          <div className="mt-4 text-center">
+            <Link to="/signup" className="text-sm text-blue-600 hover:underline">
+              Do not have an account? Sign up
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </div>)
+  );
+}
+
+// Signup Page Component
+function SignupPage({ onSignup }) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // Here you would typically make an API call to create a new user
+    // For this example, we'll just simulate a successful signup
+    onSignup({ name, email })
+  }
+
+  return (
+    (<div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">Sign Up</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="name">Full Name</label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="email">Email</label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="password">Password</label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required />
+            </div>
+            <Button type="submit" className="w-full">Sign Up</Button>
+          </form>
+          <div className="mt-4 text-center">
+            <Link to="/login" className="text-sm text-blue-600 hover:underline">
+              Already have an account? Sign in
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </div>)
+  );
+}
+
 // Main App Component
 export function Page() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState(null)
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Check if user is logged in (e.g., by checking local storage or a token)
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+      setIsLoggedIn(true)
+    }
+  }, [])
+
+  const handleLogin = (userData) => {
+    setUser(userData)
+    setIsLoggedIn(true)
+    localStorage.setItem('user', JSON.stringify(userData))
+    navigate('/');
+  };
+
+  const handleSignup = (userData) => {
+    setUser(userData)
+    setIsLoggedIn(true)
+    localStorage.setItem('user', JSON.stringify(userData))
+    navigate('/');
+  };
+
+  const handleLogout = () => {
+    setUser(null)
+    setIsLoggedIn(false)
+    localStorage.removeItem('user')
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} />
       <main className="pt-16">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/network" element={<NetworkPage />} />
-          <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/messaging" element={<MessagingPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/network"
+            element={isLoggedIn ? <NetworkPage /> : <LoginPage onLogin={handleLogin} />}
+          />
+          <Route
+            path="/jobs"
+            element={isLoggedIn ? <JobsPage /> : <LoginPage onLogin={handleLogin} />}
+          />
+          <Route
+            path="/messaging"
+            element={isLoggedIn ? <MessagingPage /> : <LoginPage onLogin={handleLogin} />}
+          />
+          <Route
+            path="/notifications"
+            element={isLoggedIn ? <NotificationsPage /> : <LoginPage onLogin={handleLogin} />}
+          />
+          <Route
+            path="/profile"
+            element={isLoggedIn ? <ProfilePage user={user} /> : <LoginPage onLogin={handleLogin} />}
+          />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/signup" element={<SignupPage onSignup={handleSignup} />} />
         </Routes>
       </main>
     </div>
   );
 }
-export default {Navbar, HomePage, NetworkPage, JobsPage, NotificationsPage, ProfilePage}
+
+export default {Navbar, HomePage, NetworkPage, JobsPage, NotificationsPage, ProfilePage, LoginPage, SignupPage}

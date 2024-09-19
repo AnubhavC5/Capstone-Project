@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 :root {
   --background: 0 0% 100%;
@@ -48,84 +48,57 @@
 }
 
 * {
-  @apply border-border;
+  border-color: hsl(var(--border));
 }
 
 body {
-  @apply bg-background text-foreground;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   font-feature-settings: "rlig" 1, "calt" 1;
-}
-
-@layer base {
-  body {
-    @apply antialiased;
-  }
-}
-
-@layer components {
-  .linkedin-button {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
-  }
-
-  .linkedin-button-primary {
-    @apply linkedin-button bg-primary text-primary-foreground hover:bg-primary/90;
-  }
-
-  .linkedin-button-secondary {
-    @apply linkedin-button bg-secondary text-secondary-foreground hover:bg-secondary/80;
-  }
-
-  .linkedin-button-ghost {
-    @apply linkedin-button hover:bg-accent hover:text-accent-foreground;
-  }
-
-  .linkedin-button-link {
-    @apply linkedin-button text-primary underline-offset-4 hover:underline;
-  }
-}
-
-@layer utilities {
-  .linkedin-card {
-    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
-  }
-
-  .linkedin-input {
-    @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
-  }
-
-  .linkedin-badge {
-    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
-  }
-
-  .linkedin-avatar {
-    @apply relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full;
-  }
-
-  .linkedin-dropdown-content {
-    @apply z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md;
-  }
-
-  .linkedin-dropdown-item {
-    @apply relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground;
-  }
 }
 
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: hsl(var(--muted-foreground));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: hsl(var(--foreground));
+}
+
+/* Custom utility classes */
+.linkedin-blue {
+  color: #0077b5;
+}
+
+.linkedin-blue-bg {
+  background-color: #0077b5;
+}
+
+.linkedin-light-blue {
+  color: #00a0dc;
+}
+
+.linkedin-light-blue-bg {
+  background-color: #00a0dc;
+}
+
+.linkedin-dark-blue {
+  color: #004471;
+}
+
+.linkedin-dark-blue-bg {
+  background-color: #004471;
 }
 
 /* Animations */
@@ -134,25 +107,71 @@ body {
   to { opacity: 1; }
 }
 
-.animate-fade-in {
+.fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Responsive adjustments */
+@keyframes slideInFromBottom {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.slide-in-bottom {
+  animation: slideInFromBottom 0.3s ease-out;
+}
+
+/* Custom component styles */
+.nav-link {
+  @apply text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium;
+}
+
+.nav-link-active {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded;
+}
+
+.card {
+  @apply bg-white shadow-md rounded-lg overflow-hidden;
+}
+
+.card-header {
+  @apply px-6 py-4 bg-gray-50 border-b;
+}
+
+.card-body {
+  @apply px-6 py-4;
+}
+
+.form-input {
+  @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+/* Responsive utilities */
 @media (max-width: 640px) {
-  .linkedin-card {
-    @apply rounded-none border-x-0;
+  .hide-on-mobile {
+    display: none;
   }
 }
 
-/* Accessibility */
-.sr-only {
-  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hide-on-tablet {
+    display: none;
+  }
 }
 
-/* Print styles */
-@media print {
-  .no-print {
-    display: none !important;
+@media (min-width: 1025px) {
+  .hide-on-desktop {
+    display: none;
   }
 }
